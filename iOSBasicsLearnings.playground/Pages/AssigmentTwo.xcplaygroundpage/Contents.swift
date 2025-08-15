@@ -33,10 +33,10 @@ import Foundation
 //}
 
 
-//func sumOfTwo(x:Int, y:Int) -> Int {
-//    return x+y
-//}
-//print(sumOfTwo(x: 1,y: 2))
+func sumOfTwo(_ x:Int,_ y:Int) -> Int {
+    return x+y
+}
+print(sumOfTwo(1,2))
 //
 //
 //func sumOfTwo(_ x:Int,_ y:Int) -> Int {
@@ -51,19 +51,19 @@ import Foundation
 //
 //
 ////Inout paramters, (means could be incremenated, modified )
-//func increment (value: inout Int) {
-//    value += 1
-//}
-//var count = 10
-//increment(value: &count)
+func increment (value: inout Int) {
+    value += 1
+}
+var count = 10
+increment(value: &count)
 //
 //
 //
-//func doSpecificTask(name:String, age:Int = 1, gender:Bool) -> String{
-//    return "Hello \(name), you are \(age) years old and \(gender ? "Male" : "Female")"
-//}
-//
-//print(doSpecificTask(name: "Swift", age: 10, gender: true))
+func doSpecificTask(name:String, age:Int = 1, gender:Bool) -> String{
+    return "Hello \(name), you are \(age) years old and \(gender ? "Male" : "Female")"
+}
+
+print(doSpecificTask(name: "Swift", age: 10, gender: false))
 ////argument labels & paramter names
 //func muliply(_ x:Int, _ y:Int) -> Int {
 //return x * y
@@ -148,6 +148,7 @@ var map: [String: Int] = ["apple": 2, "banana": 5, "orange": 4]
 map["apple"] 
 map["pineapple"] 
 map["pineapple"] = 10
+map["pineapple"]
 // classic two sums prob
 var twoSumArr = [2, 7, 11, 5]
 var twoSumMap: [Int: Int] = [:]
@@ -157,6 +158,7 @@ for (index, value) in twoSumArr.enumerated() {
     let complement: Int = target - value
     if twoSumMap[complement] != nil {
         print("Found!")
+    
     }
     twoSumMap[value] = index
 }
@@ -173,12 +175,13 @@ myArray.append(4)
 myArray.append(5)
 
 myArray.removeLast()
+print(myArray)
 
 myArray.remove(at: 0) // O(N)
 // or
 myArray.removeFirst()
 
-myArray.insert(6, at: 2)// not efficient
+myArray.insert(6, at: 1)// not efficient
 
 print(myArray)
 
@@ -202,5 +205,5 @@ set.insert(3)
 set.insert(4)
 set.insert(5)
 
-set.contains(4) // should be true
+set.contains(6) // should be true
 print(set)
