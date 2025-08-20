@@ -25,220 +25,220 @@ import Foundation
 // Build a struct Vector2D with methods to add and subtract two vectors
 
 
-enum Season {
-    case spring
-    case summer
-    case autumn
-    case winter
-}
-print(SeasonOneLine.autumn)
-
-
-
-
-// to enable iteration, looping we could add CaseIterable
-
-
-
-
-enum SeasonOneLine: CaseIterable {
-    case spring, summer, autumn, winter
-    
-    func printSeason() {
-        switch self {
-        case .spring:
-            print("Spring")
-        case .summer:
-            print("Summer")
-        case .autumn:
-            print("Autumn")
-        case .winter:
-            print("Winter")
-        }
-    }
-}
-var testSeason: [String] = []
-for season in SeasonOneLine.allCases {
-    testSeason.append("\(season)")
-}
-print("testSeason",testSeason)
-
-
-
-// nested enums
-enum SeasonMonths: CaseIterable {
-    enum Spring: Int, CaseIterable {
-        case march = 3
-        case april = 4
-        case may = 5
-        
-        var activity : String {
-            switch self {
-            case .march:
-                return "Watch flowers bloom, celebrate my birthday"
-                
-            case .april:
-                return "Dance in spring rain"
-            case .may:
-                return "5 de mayo"
-            }
-        }
-    }
-    enum Summer: Int, CaseIterable {
-        case june = 6
-        case july = 7
-        case august = 8
-        
-        var activity : String {
-            switch self {
-            case .june:
-                return "Go to the beach"
-                
-            case .july:
-                return "Go to the beach"
-            case .august:
-                return "get heatstroke from the hot, steamy humidity in Atlanta"
-            }
-        }
-    }
-    enum Autumn: Int, CaseIterable {
-        case september = 9
-        case october = 10
-        case november = 11
-        var activity : String {
-            switch self {
-            case .september:
-                return "get rekt by crypto bears"
-                
-            case .october:
-                return "Hallooween"
-            case .november:
-                return "Thanksgiving"
-            }
-        }
-    }
-    enum Winter: Int, CaseIterable {
-        case december = 12
-        case january = 1
-        case february = 2
-        
-        var activity : String {
-            switch self {
-            case .december:
-                return "New Year"
-                
-            case .january:
-                return "Pasha"
-            case .february:
-                return "build a snowman"
-            }
-        }
-    }
-}
-
-
-print(SeasonMonths.Spring.march.activity)
-print(SeasonMonths.Winter.february.activity)
-
-// iterate and list out all the months and activities
-
-
-for season in SeasonMonths.Spring.allCases {
-    print("season: \(season)")
-}
-
-
-// Define an enum LoginState with cases loggedIn(user: String) and loggedOut.
-enum LoginState {
-    case loggedIn(user: String)
-    case loggedOut
-    
-    func displayLog() {
-        switch self {
-        case .loggedIn(user: let user):
-            print("user:\(user) logged in")
-        case .loggedOut:
-            print("logged out")
-        }
-    }
-}
-print("LoginState", LoginState.loggedIn(user: "Bob"))
-
-
-// Create an enum with raw values for HTTP methods (GET, POST, etc.).
-enum HTTPMethod: String {
-    case get = "GET"
-    case post = "POST"
-    case patch = "PATCH"
-    case put = "PUT"
-    case delete = "DELETE"
-}
-
-print(HTTPMethod.post)
-
-// Add a computed property to an enum Planet returning its order from the sun.
-enum Planet: Int {
-    case mercury = 1
-    case venus = 2
-    case earth = 3
-
-    case mars = 4
-    case jupiter = 5
-    case saturn = 6
-    case uranus = 7
-    case neptune = 8
-    var OrderFromSun: String {
-        switch self {
-            case .mercury:
-            return "1"
-        case .venus:
-            return "2"
-        case .earth:
-            return "3"
-        case .mars:
-            return "4"
-        case .jupiter:
-            return "5"
-        case .saturn:
-            return "6"
-        case .uranus:
-            return "7"
-        case .neptune:
-            return "8"
-            
-        @unknown default:
-            return "unknown"
-        }
-    }
-}
-print(Planet.earth.OrderFromSun)
-
-
-
-// Iterate over all cases of an enum TransportMode using CaseIterable.
-
-enum TransportMode: CaseIterable {
-    case car, train, plane, bike
-    
-    func printSeason() {
-        switch self {
-        case .car:
-            print("Car")
-        case .train:
-            print("Train")
-        case .plane:
-            print("Plane")
-        case .bike:
-            print("Bike")
-        }
-    }
-}
-var testTransport: [String] = []
-for tran in TransportMode.allCases {
-    testTransport.append("\(tran)")
-}
-print("testTransport",testTransport)
-
+//enum Season {
+//    case spring
+//    case summer
+//    case autumn
+//    case winter
+//}
+//print(SeasonOneLine.autumn)
+//
+//
+//
+//
+//// to enable iteration, looping we could add CaseIterable
+//
+//
+//
+//
+//enum SeasonOneLine: CaseIterable {
+//    case spring, summer, autumn, winter
+//    
+//    func printSeason() {
+//        switch self {
+//        case .spring:
+//            print("Spring")
+//        case .summer:
+//            print("Summer")
+//        case .autumn:
+//            print("Autumn")
+//        case .winter:
+//            print("Winter")
+//        }
+//    }
+//}
+//var testSeason: [String] = []
+//for season in SeasonOneLine.allCases {
+//    testSeason.append("\(season)")
+//}
+//print("testSeason",testSeason)
+//
+//
+//
+//// nested enums
+//enum SeasonMonths: CaseIterable {
+//    enum Spring: Int, CaseIterable {
+//        case march = 3
+//        case april = 4
+//        case may = 5
+//        
+//        var activity : String {
+//            switch self {
+//            case .march:
+//                return "Watch flowers bloom, celebrate my birthday"
+//                
+//            case .april:
+//                return "Dance in spring rain"
+//            case .may:
+//                return "5 de mayo"
+//            }
+//        }
+//    }
+//    enum Summer: Int, CaseIterable {
+//        case june = 6
+//        case july = 7
+//        case august = 8
+//        
+//        var activity : String {
+//            switch self {
+//            case .june:
+//                return "Go to the beach"
+//                
+//            case .july:
+//                return "Go to the beach"
+//            case .august:
+//                return "get heatstroke from the hot, steamy humidity in Atlanta"
+//            }
+//        }
+//    }
+//    enum Autumn: Int, CaseIterable {
+//        case september = 9
+//        case october = 10
+//        case november = 11
+//        var activity : String {
+//            switch self {
+//            case .september:
+//                return "get rekt by crypto bears"
+//                
+//            case .october:
+//                return "Hallooween"
+//            case .november:
+//                return "Thanksgiving"
+//            }
+//        }
+//    }
+//    enum Winter: Int, CaseIterable {
+//        case december = 12
+//        case january = 1
+//        case february = 2
+//        
+//        var activity : String {
+//            switch self {
+//            case .december:
+//                return "New Year"
+//                
+//            case .january:
+//                return "Pasha"
+//            case .february:
+//                return "build a snowman"
+//            }
+//        }
+//    }
+//}
+//
+//
+//print(SeasonMonths.Spring.march.activity)
+//print(SeasonMonths.Winter.february.activity)
+//
+//// iterate and list out all the months and activities
+//
+//
+//for season in SeasonMonths.Spring.allCases {
+//    print("season: \(season)")
+//}
+//
+//
+//// Define an enum LoginState with cases loggedIn(user: String) and loggedOut.
+//enum LoginState {
+//    case loggedIn(user: String)
+//    case loggedOut
+//    
+//    func displayLog() {
+//        switch self {
+//        case .loggedIn(user: let user):
+//            print("user:\(user) logged in")
+//        case .loggedOut:
+//            print("logged out")
+//        }
+//    }
+//}
+//print("LoginState", LoginState.loggedIn(user: "Bob"))
+//
+//
+//// Create an enum with raw values for HTTP methods (GET, POST, etc.).
+//enum HTTPMethod: String {
+//    case get = "GET"
+//    case post = "POST"
+//    case patch = "PATCH"
+//    case put = "PUT"
+//    case delete = "DELETE"
+//}
+//
+//print(HTTPMethod.post)
+//
+//// Add a computed property to an enum Planet returning its order from the sun.
+//enum Planet: Int {
+//    case mercury = 1
+//    case venus = 2
+//    case earth = 3
+//
+//    case mars = 4
+//    case jupiter = 5
+//    case saturn = 6
+//    case uranus = 7
+//    case neptune = 8
+//    var OrderFromSun: String {
+//        switch self {
+//            case .mercury:
+//            return "1"
+//        case .venus:
+//            return "2"
+//        case .earth:
+//            return "3"
+//        case .mars:
+//            return "4"
+//        case .jupiter:
+//            return "5"
+//        case .saturn:
+//            return "6"
+//        case .uranus:
+//            return "7"
+//        case .neptune:
+//            return "8"
+//            
+//        @unknown default:
+//            return "unknown"
+//        }
+//    }
+//}
+//print(Planet.earth.OrderFromSun)
+//
+//
+//
+//// Iterate over all cases of an enum TransportMode using CaseIterable.
+//
+//enum TransportMode: CaseIterable {
+//    case car, train, plane, bike
+//    
+//    func printSeason() {
+//        switch self {
+//        case .car:
+//            print("Car")
+//        case .train:
+//            print("Train")
+//        case .plane:
+//            print("Plane")
+//        case .bike:
+//            print("Bike")
+//        }
+//    }
+//}
+//var testTransport: [String] = []
+//for tran in TransportMode.allCases {
+//    testTransport.append("\(tran)")
+//}
+//print("testTransport",testTransport)
+//
 
 
 
@@ -319,94 +319,100 @@ print("testTransport",testTransport)
 //}
 //Create a class Car with properties make and model, and a method drive().
 
-class Car {
-    var make: String
-    var model: String
-    
-    init(make: String, model: String) {
-        self.make = make
-        self.model = model
-    }
-    
-    func drive() {
-        print("Drive the car")
-    }
-    
-}
-let someCar = Car(make: "Merc", model: "Gwagon")
+//class Car {
+//    var make: String
+//    var model: String
+//    
+//    init(make: String, model: String) {
+//        self.make = make
+//        self.model = model
+//    }
+//    
+//    func drive() {
+//        print("Drive the car")
+//    }
+//    
+//}
+//let someCar = Car(make: "Merc", model: "Gwagon")
+//
+//// Build an Employee class inheriting from Person with an extra property employeeID.
+//class Person {
+//    var name: String
+//    var age: Int
+//    init(name: String, age: Int) {
+//        self.name = name
+//        self.age = age
+//    }
+//}
+//
+//class Employee: Person {
+//    var employeeID: Int
+//    
+//    init(name: String, age: Int, employeeID: Int) {
+//        self.employeeID = employeeID
+//        super.init(name: name, age: age)
+//    }
+//}
+//// Implement a class BankAccount with deposit and withdraw methods.
+//class BankAccount {
+//    private var balance = 999999.00
+//    
+//    init(balance: Double ) {
+//        self.balance = balance
+//    }
+//    func deposit(amount:Double) {
+//        balance += amount
+//        
+//    }
+//    func withdraw(amount:Double) -> Any {
+//        guard amount <= balance else {
+//            print("not enough")
+//            return false
+//        }
+//        balance -= amount
+//        return balance
+//    }
+//}
+//// Create a Shape base class and Triangle/Square subclasses overriding an area() method.
+//class Shape {
+//    func area() -> Double {
+//        return 0.0
+//    }
+//    
+//    
+//}
+//class Triangle: Shape {
+//    var base: Double
+//    var heigh: Double
+//    init(base: Double, heigh: Double) {
+//        self.base = base
+//        self.heigh = heigh
+//    }
+//    override func area() -> Double { // ////MARK: Polymorphism
+//        return 0.5 * base * heigh
+//    }
+//}
+//
+//class Square: Shape {
+//    var side: Double
+//    init(side: Double) {
+//        self.side = side
+//    }
+//    override func area() -> Double { // ////MARK: Polymorphism
+//        return side * side
+//    }
+//}
+//let triangle = Triangle(base: 6, heigh: 10)
+//let square = Square(side: 5)
+//
+//print("Triangle area: \(triangle.area())")
+//print("Square area: \(square.area())")
 
-// Build an Employee class inheriting from Person with an extra property employeeID.
-class Person {
-    var name: String
-    var age: Int
-    init(name: String, age: Int) {
-        self.name = name
-        self.age = age
-    }
-}
 
-class Employee: Person {
-    var employeeID: Int
-    
-    init(name: String, age: Int, employeeID: Int) {
-        self.employeeID = employeeID
-        super.init(name: name, age: age)
-    }
-}
-// Implement a class BankAccount with deposit and withdraw methods.
-class BankAccount {
-    private var balance = 999999.00
-    
-    init(balance: Double ) {
-        self.balance = balance
-    }
-    func deposit(amount:Double) {
-        balance += amount
-        
-    }
-    func withdraw(amount:Double) -> Any {
-        guard amount <= balance else {
-            print("not enough")
-            return false
-        }
-        balance -= amount
-        return balance
-    }
-}
-// Create a Shape base class and Triangle/Square subclasses overriding an area() method.
-class Shape {
-    func area() -> Double {
-        return 0.0
-    }
-    
-    
-}
-class Triangle: Shape {
-    var base: Double
-    var heigh: Double
-    init(base: Double, heigh: Double) {
-        self.base = base
-        self.heigh = heigh
-    }
-    override func area() -> Double { // ////MARK: Polymorphism
-        return 0.5 * base * heigh
-    }
-}
 
-class Square: Shape {
-    var side: Double
-    init(side: Double) {
-        self.side = side
-    }
-    override func area() -> Double { // ////MARK: Polymorphism
-        return side * side
-    }
-}
-let triangle = Triangle(base: 6, heigh: 10)
-let square = Square(side: 5)
 
-print("Triangle area: \(triangle.area())")
-print("Square area: \(square.area())")
+
+
 
 
 // Demonstrate reference semantics by assigning one instance to multiple variables and modifying it.
@@ -418,18 +424,26 @@ class DogClass {
         self.name = name
         self.age = age
     }
-    func updateRersonDetails(AnotherName:String, AnotherAge: Int){
-        self.name = AnotherName
-        self.age = AnotherAge
+//    func updateDogsDetails(AnotherName:String, AnotherAge: Int){
+//        self.name = AnotherName
+//        self.age = AnotherAge
+//    }
+    func displayInfo() {
+        print("Dogs, name: \(name)")
     }
 }
 
 
-var pet1 = Dog(name: "Rex", age: 5)
+var pet1 = DogClass(name: "Rex", age: 5)
 
 var pet2 = pet1
-pet2 = Dog(name: "Max", age: 10)
-print("pet1",pet1)
+//pet2 = DogClass(name: "Max", age: 10)
+pet2.name = "Max"
+pet2.age = 7
+
+pet1.displayInfo()
+print(pet1)
+
 
 
 
@@ -438,20 +452,26 @@ struct Dog {
     var name: String
     var age: Int
     
-    mutating func updateRersonDetails(AnotherName:String, AnotherAge: Int){
-        self.name = AnotherName
-        self.age = AnotherAge
+//    mutating func updateDogsDetails(AnotherName:String, AnotherAge: Int){
+//        self.name = AnotherName
+//        self.age = AnotherAge
+//    }
+    
+    func displayInfo() {
+        print("Dogs name \(name)")
     }
     
 }
 
 
-var petS1 = Dog (name: "Rex", age: 5)
 
-var petS2 = pet1
+
+let petS1 = Dog(name: "Rex", age: 5)
+
+var petS2 = petS1
 petS2 = Dog(name: "Max", age: 10)
-
-print("petS1",petS1)
+print(petS1)
+petS1.displayInfo()
 
 
 //4.Structs
