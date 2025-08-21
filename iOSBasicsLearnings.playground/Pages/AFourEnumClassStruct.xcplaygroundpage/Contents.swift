@@ -24,7 +24,7 @@ import Foundation
 // Make a struct Temperature with a computed property converting Celsius to Fahrenheit
 // Build a struct Vector2D with methods to add and subtract two vectors
 
-
+//associated value enums
 //enum Season {
 //    case spring
 //    case summer
@@ -67,6 +67,7 @@ import Foundation
 //
 //// nested enums
 //enum SeasonMonths: CaseIterable {
+        // raw value enum
 //    enum Spring: Int, CaseIterable {
 //        case march = 3
 //        case april = 4

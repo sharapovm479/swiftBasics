@@ -174,6 +174,7 @@ protocol Greetable {
     
 }
 extension Greetable {
+    
     func sayHi() {
         "Hola privet, my name is \(name)"
     }
@@ -186,6 +187,12 @@ let person = Person(name: "Artem")
 print(person.sayHi())
 
 
+// protocol composition, compbining two portocols into one, there is built in system typealias codable = decodable & codable
+// protocol ingeratance
 
 
+// extention
+// optional is a type that could have a value or nil
+// nil coalescing operator
+// guard let , if let
 
