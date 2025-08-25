@@ -160,22 +160,18 @@ let arrayOfFahrenheit: [Double] = arrayOfCelsius.map { (celsius: Double) -> Doub
 }
 print(arrayOfFahrenheit)
 //Use filter to extract all odd numbers from [1...20].
-var oddNumber: [Int] = []
-for i in 1...20 {
-    if i.isMultiple(of: 2) {
-        continue
-    }
-    oddNumber.append(i)
-}
+var oddNumber: [Int] = Array(0...20).filter { $0.isMultiple(of: 2) == false}
+
 print(oddNumber)
 //Use reduce to multiply all numbers in [1,2,3,4].
 var arr:[Int] = [1,2,3,4]
-let result: Int = (1...4).reduce(1, *)
+let result: Int = (1...4).reduce(1, +)
+print("result",result)
 
 //Use sorted to arrange names alphabetically.
 var namesSort: [String] = ["Bob", "Charlie","Alice"]
-namesSort.sorted()
-print(namesSort)
+let sortedNames = namesSort.sorted()
+print(sortedNames)
 
 //Given a list of sentences, use flatMap to break them into words.
 
@@ -194,7 +190,16 @@ struct Stack<Element> {
     mutating func pop() -> Element? {
         return items.popLast()
     }
+    func displayStack() -> [Element] {
+        return items
+    }
 }
+var stackObj = Stack<Int>()
+stackObj.push(1)
+stackObj.push(2)
+stackObj.pop()
+stackObj.displayStack()
+
 
 //Write a generic function maxValue<T: Comparable>( a: T,  b: T) -> T.
 func genericFuncMaxValue<T: Comparable>(a: T, b: T) -> T {
@@ -211,14 +216,18 @@ struct QueueG<T> {
     mutating func dequeue() -> T? {
         return items.removeFirst()
     }
+    func displayQueue() -> [T] {
+        return items
+    }
 }
 var genericQ = QueueG<Int>()
 genericQ.enqueue(1)
 genericQ.enqueue(2)
 genericQ.enqueue(3)
 genericQ.enqueue(4)
-genericQ.dequeue()!
-print(genericQ.dequeue()!)
+genericQ.dequeue()
+print(genericQ.displayQueue())
+
 //Write a generic function to reverse any array.
 func reverseArray<T>(_ array: inout [T]) -> [T]? {
     
@@ -229,10 +238,13 @@ var res = reverseArray(&arr)
 print(res)
 
 //Show use of Genrics for enum
-enum GenericEnum {
-    case int(Int)
-    case string(String)
+enum GenericEnum<T> {
+    case option1(T)
+    case option2(T)
 }
+
+
+
 //Show use of Genrics for Class
 class GenericClasss<T> {
     var value: T
@@ -252,7 +264,7 @@ protocol QueueProtocol {
 
 struct IntQueue: QueueProtocol {
     var items: [Int] = []
-    
+   
     mutating func enqueue(_ element: Int) {
         items.append(element)
     }
@@ -260,6 +272,7 @@ struct IntQueue: QueueProtocol {
     mutating func dequeue() -> Int? {
         return items.removeFirst()
     }
+    
 }
 
 var testIntQueue = IntQueue()
