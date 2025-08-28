@@ -68,3 +68,18 @@ var optionalDict: [String: Int]? = ["a": 1, "b": 2]
 
 
 
+func areaOfCube (_ x: Int, _ y: Int, _ z: Int) -> Int {
+    return x*y*z
+}
+areaOfCube(2,2,2)
+
+var sqrtClosure: (Int,Int,Int) -> Int = {
+ return $0 * $1 * $2
+}
+
+var sqrtClosure2 = { (x:Int,y:Int,z:Int) -> Int in
+    return x * y * z
+    
+}
+sqrtClosure(2,2,2)
+sqrtClosure2

@@ -22,6 +22,7 @@ import Foundation
 //
 //
 //Models
+
 //
 //
 //Services
@@ -86,28 +87,40 @@ import Foundation
 //
 //Models
 //
+// MARK: - Structs- Models
+
+//    •    Define a Product (struct) with id, name, category, price.
+struct Product: IdentifiableEntity, Priceable {
+    var id: Int
+    var name: String
+    var category: Category
+    var price: Double
+}
+
+//    •    Define a CartItem (struct) that holds a product and quantity.
+struct CartItem {
+    var product: Product
+    var quantity: Int
+}
 
 //    •    Define a MarketError enum (productNotFound, invalidQty, outOfStock).
 enum MarketError: Error {
     case productNotFound
-    case MarketError
     case invalidQty
     case outOfStock
 }
 
 //    •    Use an enum with raw values for Category (e.g., electronics, grocery, apparel).
 enum Category: String {
-    
-    case electronics = "electronics"
-    case grocery = "grocery"
-    case apparel = "apparel"
-    // to have array of items let's use switch
-    var items: [String] {
+    case electronics
+    case grocery
+    case apparel
+    var items:[String] {
         switch self {
         case .electronics:
-            return ["TV", "Laptop", "Speakers"]
+            return ["TV", "Speakers", "Laptop"]
         case .grocery:
-            return ["Bread", "Milk", "Eggs"]
+            return ["Bread", "Milk", "Apples"]
         case .apparel:
             return ["T-shirts", "Jeans", "Shoes"]
         }
@@ -120,8 +133,8 @@ enum PriceRule {
     case percent(Double)
 }
 
-//Protocols
-//
+// MARK: - Protocols
+
 //    •    Create protocols for IdentifiableEntity and Priceable.
 protocol IdentifiableEntity {
     var id: Int { get }
@@ -136,237 +149,227 @@ protocol Discountable: Priceable {
     var discount: Double { get }
 }
 
-//    •    Show protocol composition in at least one function parameter.
-// two ways to show protocol composition, typealies name = protocolOne & protocol two
-// second method struct name: ProtocolOne, ProtocolTwo. according to stackoverflow typealies name = p1 & p2 is better to use
-typealias protcolCombination = Priceable & Discountable
-
-
 //    •    Add a default implementation via protocol extensions (POP style).
 extension Discountable {
-    // below computed property priceAfterDiscount
     var priceAfterDiscount: Double {
         price * (1 - discount)
     }
 }
 
-//let promo = Discountable(CartItem(product: Product(id: 1, name: "Phone", category: .electronics, price: 1000), quantity: 1), discount: 0.2)
-//print("Price after discount:",promo.priceAfterDiscount)
 
-//    •    Define a Product (struct) with id, name, category, price.
-// MODEL
-struct Product: IdentifiableEntity, Priceable {
-    var id: Int
-    var name: String
-    var category: Category
-    var price: Double
 
-}
+// MARK: - Generics & Repository
 
-//    •    Define a CartItem (struct) that holds a product and quantity.
-struct CartItem: IdentifiableEntity {
-    var id: Int
-    
-    
-    var product: Product
-    var quantity: Int
-    
-}
-
-//used Generics, Associated Type
-//
 //    •    Create a generic Repository with an associatedtype Item.
 protocol Repository {
-    associatedtype Item: IdentifiableEntity //
+    associatedtype Item: IdentifiableEntity
     func find(_ id: Int) -> Item?
     func all() -> [Item]
+    func add(_ item: Item)
+    func remove(_ id: Int)
 }
 
 //    •    Implement a generic in-memory repository for products or cart items.
-struct InMemoryRepository<T: IdentifiableEntity>: Repository {
+class InMemoryRepository<T: IdentifiableEntity>: Repository {
     private var items: [T] = []
+    
     func all() -> [T] {
         return items
     }
     
-    
-    mutating func add(_ item: T) {
+    func add(_ item: T) {
         items.append(item)
     }
     
     func find(_ id: Int) -> T? {
         items.first { $0.id == id }
     }
+    
+    func remove(_ id: Int) {
+        items.removeAll { $0.id == id }
+    }
 }
 
-//Services
-//
+// MARK: - Services
 
 //    •    Create a base class Service.
 class Service {
     var name: String = "BaseService"
-    
-
-    
 }
+
+
+// MARK: - Global instances
+
+let inventory = InventoryService()
+let cart = CartService()
+
+//protocol MarketPlaceProt {
+//    let inventory: InventoryService() { get }
+//    let cart: CartService() { get }
+//}
+//
+struct MarketplaceStruct {
+let inventory: InventoryService
+}
+protocol InvetorryProvidingDepInversion {
+//    func product(withID id: Int) -> Product?
+}
+
 
 //    •    Inherit InventoryService (manages products) and CartService (manages cart & totals).
 class InventoryService: Service {
+    
     private var productRepository = InMemoryRepository<Product>()
     
-    override init() {
-        super.init()
-        self.name = "InventoryService"
-    }
-    func product(withId id: Int) -> Product? {
-        return productRepository.find(id) as? Product
-    }
-
-    
-    func addProduct() {
-        print("addProduct",addProduct)
+    func addProduct(_ product: Product) {
+        productRepository.add(product)
     }
     
     func getAllProducts() -> [Product] {
-        return productRepository.all()
+        productRepository.all()
     }
     
-
+    func product(withId id: Int) -> Product? {
+        productRepository.find(id)
+    }
 }
-// CartService (manages cart & totals). // totalCarts?
+
 class CartService: Service {
-    private var cartRepository = InMemoryRepository<CartItem>()
-    override init() {
-        super.init()
-        self.name = "CartService"
-    }
-    func cartItems() -> [CartItem] {
-        return cartRepository.all()
-    }
-
-//    func cartRepository() -> InMemoryRepository<CartItem> {
-//        return cartRepository
-//    }
+    private var items: [CartItem] = []
+    private var discountAmount: Double = 0
     
-
+    func addToCart(productId: Int, qty: Int, inventory: InventoryService) throws {
+        guard qty > 0 else { throw MarketError.invalidQty }
+        guard let product = inventory.product(withId: productId) else {
+            throw MarketError.productNotFound
+        }
+        
+        if let index = items.firstIndex(where: { $0.product.id == productId }) {
+            items[index].quantity += qty
+        } else {
+            items.append(CartItem(product: product, quantity: qty))
+        }
+    }
     
-
+    func removeFromCart(productId: Int) {
+        items.removeAll { $0.product.id == productId }
+    }
+    
+    func applyDiscountRules(_ rules: [PriceRule]) {
+        let subtotal = items.reduce(0) { $0 + ($1.product.price * Double($1.quantity)) }
+        discountAmount = 0
+        
+        for rule in rules {
+            switch rule {
+            case .flat(let amount):
+                discountAmount += amount
+            case .percent(let percent):
+                discountAmount += subtotal * (percent / 100)
+            }
+        }
+    }
+    
+    func calculateTotal() -> Double {
+        let subtotal = items.reduce(0) { $0 + ($1.product.price * Double($1.quantity)) }
+        return subtotal - discountAmount
+    }
+    
+    func printSummary() {
+        let grouped = Dictionary(grouping: items) { $0.product.category }
+        
+        for (category, items) in grouped {
+            print("\(category):")
+            for item in items {
+                print(" \(item.product.name): $\(item.product.price) x \(item.quantity)")
+            }
+        }
+        let subtotal = items.reduce(0) { $0 + ($1.product.price * Double($1.quantity)) }
+        print("Subtotal: $\(subtotal)")
+        print("Discount: $\(discountAmount)")
+        print("Total: $\(calculateTotal())")
+    }
 }
 
-// Global marketplace instance for standalone functions
-nonisolated(unsafe) var marketplace = InventoryService()
-nonisolated(unsafe) var cart = CartService()
 
-//Expected Features
-//
-//
-//    •    Add products to catalog. // where to add in InventoryService?
-func productCatalogAdd(_ product: Product) -> Void {
-    marketplace.addProduct(product)
+
+
+
+// MARK: - Expected Features
+
+//    •    Add products to catalog.
+@MainActor func productCatalogAdd(_ product: Product) {
+    inventory.addProduct(product)
 }
 
-//    •    Search products by closure filter, usage
-func productCatalogSearch(_ filter: (Product) -> Bool) -> [Product] {
-    return marketplace.productRepository.all().filter(filter)
+//    •    Search products by closure filter.
+@MainActor func productCatalogSearch(_ filter: (Product) -> Bool) -> [Product] {
+    inventory.getAllProducts().filter(filter)
 }
-
-productCatalogAdd(Product(id: 1, name: "iPhone", category: .electronics, price: 999.99))
-productCatalogAdd(Product(id: 2, name: "Bread", category: .grocery, price: 2.99))
-productCatalogAdd(Product(id: 3, name: "T-Shirt", category: .apparel, price: 19.99))
-productCatalogAdd(Product(id: 4, name: "Laptop", category: .electronics, price: 1299.99))
-var testProducts: [Product] = []
-testProducts = productCatalogSearch { $0.category == .grocery }
-print(testProducts)
 
 //    •    Add/remove products to/from cart.
-func addToCart(_ productId: Int, _ qty: Int) throws -> Void {
-    return try cart.cartRepository.add(productId: productId, qty: qty)
-    
-}
-func removeFromCart(_ productId: Int) -> Void {
-    return cart.cartRepository.add(productId: productId, qty: -1)
+@MainActor func addToCart(_ productId: Int, _ qty: Int) throws {
+    try cart.addToCart(productId: productId, qty: qty, inventory: inventory)
 }
 
-// Add to cart with error handling
-do {
-    try addToCart(1, 2)
-    try addToCart(2, 5)
-    try addToCart(3, 1)
-} catch MarketError.productNotFound {
-    print("Product not found!")
-} catch MarketError.invalidQty {
-    print("Invalid quanty")
-} catch MarketError.outOfStock {
-    print("Out of stock")
+@MainActor func removeFromCart(_ productId: Int) {
+    cart.removeFromCart(productId: productId)
 }
-
 
 //    •    Apply discount rules (flat and percent).
-func applyDiscount(_ rules: [PriceRule]) -> Void {
-    cart.applyDiscount(rules)
+@MainActor func applyDiscount(_ rules: [PriceRule]) {
+    cart.applyDiscountRules(rules)
 }
-applyDiscount([.flat(10), .percent(5)])
 
 //    •    Print cart summary (total, discount applied, grouped by category).
-func printCartSummary() -> Void {
-    cart.printCartSummary()
+@MainActor func printCartSummary() {
+    cart.printSummary()
 }
 
-
-//    •    Use map, filter, reduce, compactMap to:
+// MARK: - Higher-Order Functions
 
 //    ◦    Extract product names.
-func getProductNames() -> [String] {
-    // return use map to get product names
-    return marketplace.getAllProducts().map { $0.name }
+@MainActor func getProductNames() -> [String] {
+    inventory.getAllProducts().map { $0.name }
 }
 
 //    ◦    Filter products by category.
-func getProductsByCategory(_ category: Category) -> [Product] {
-    // return .filter
-    return marketplace.getAllProducts().filter { $0.category == category }
+@MainActor func getProductsByCategory(_ category: Category) -> [Product] {
+    inventory.getAllProducts().filter { $0.category == category }
 }
 
 //    ◦    Compute cart total.
-func computeCartTotal() -> Int {
-    return cart.cartItems().count
+@MainActor func computeCartTotal() -> Double {
+    cart.calculateTotal()
 }
 
 //    ◦    Remove invalid coupons (compactMap).
 func removeInvalidCoupons(_ coupons: [String?]) -> [String] {
-//    if coupons == inValidCoupon {
-//        // then remove, but how do we know if the coupon is not valid?
-//    }
+    let validCoupons = ["SAVE10", "SUMMER20"]
+    return coupons.compactMap { $0 }.filter { validCoupons.contains($0) }
 }
 
-//    •    Use closures for:
+// MARK: - Closures
+
 //    ◦    Searching/filtering products (search(whereClause:)).
-func search(whereClause: ((Product) -> Bool)?) -> [Product] {
-    // return
-    guard let whereClause = whereClause else {
-        return marketplace.getAllProducts()
-    }
-    return marketplace.getAllProducts().filter(whereClause)
+@MainActor func search(whereClause: (Product) -> Bool) -> [Product] {
+    inventory.getAllProducts().filter(whereClause)
 }
 
-// Search products
-let expensiveProducts = productCatalogSearch { $0.price > 100 }
-print("Expensive products: ",expensiveProducts)
-
-////    ◦    Sorting products (inline comparator).
-//nonisolated(unsafe) var porducts: [String] = ["a", "b", "c"]
-func sortProductsByName(_ product: inout [Product]) -> [Product] {
-    return marketplace.getAllProducts().sorted { $0.name < $1.name }
+//    ◦    Sorting products (inline comparator).
+func sortProductsByName(_ products: inout [Product]) -> [Product] {
+    products.sort { $0.name < $1.name }
+    return products
 }
 
 //    ◦    Trailing closure syntax at least once.
-func traverseProducts(_ products: [Product], using closure: ((Product) -> Void)?) {
-    guard products.count > 0 else { return }
-    for product in products {
-        closure?(product)
-    }
-
+func traverseProducts(_ products: [Product], using closure: (Product) -> Void) {
+    products.forEach { closure($0) }
 }
 
+//    •    Show protocol composition in at least one function parameter.
+func processDiscountableItem(_ item: Priceable & Discountable) {
+    print("Price: \(item.price), After discount: \(item.priceAfterDiscount)")
+}
+//typealias protolComName = Priceable & Discountable
 
 

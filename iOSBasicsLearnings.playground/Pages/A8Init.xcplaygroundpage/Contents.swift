@@ -116,6 +116,7 @@ print(triangle.sides)
 enum MathError: Error {
     case negativeNumber
     case divisionByZero
+    
 }
 
 func sqrt(of number: Int) throws -> Int {
@@ -154,6 +155,7 @@ print("try DoTryCatch()",try DoTryCatch())
 enum NetworkError: Error {
     case invalidURL
     case serverError(code:Int)
+    case networkError(URLError)
     case noData
     case decodingFailed
 }
@@ -161,6 +163,17 @@ func fetchData(from url: URL) throws -> Data {
     guard !url.absoluteString.isEmpty || url.scheme != nil || url.absoluteString.hasPrefix("http://") || url.absoluteString.hasPrefix("https://") else {
         print("NetworkError.invalidURL",NetworkError.invalidURL)
         throw NetworkError.invalidURL
+    // old way let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            //  checking error
+        //if let error = error {
+                //  logging the specific error
+            
+//            print("Network URLSession Error: \(error)")
+                //  passing the error through to our completion handler because the caller needs to know the request failed and potentially show an error to the user or retry, so we propagate the error up
+            // completion(error)
+ 
+//            return
+//            }
     }
     return Data()
 
